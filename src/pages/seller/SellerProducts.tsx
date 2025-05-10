@@ -35,6 +35,29 @@ const SellerProducts = () => {
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Helper function to get stock status display
+  const getStockStatus = (stockCount: number | undefined) => {
+    // If stock is undefined, use default value of 0
+    const count = stockCount ?? 0;
+    
+    if (count > 10) {
+      return {
+        label: "In Stock",
+        className: "bg-green-500/10 text-green-500"
+      };
+    } else if (count > 0) {
+      return {
+        label: "Low Stock",
+        className: "bg-yellow-500/10 text-yellow-500"
+      };
+    } else {
+      return {
+        label: "Out of Stock",
+        className: "bg-red-500/10 text-red-500"
+      };
+    }
+  };
+
   return (
     <SellerLayout title="Manage Products">
       {/* Header actions */}
@@ -104,56 +127,60 @@ const SellerProducts = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredProducts.slice(0, 10).map((product) => (
-                  <TableRow key={product.id}>
-                    <TableCell>
-                      <div className="h-10 w-10 rounded overflow-hidden">
-                        <img
-                          src={product.images[0]}
-                          alt={product.name}
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>{product.category}</TableCell>
-                    <TableCell>
-                      <div className="flex flex-col">
-                        <span>{formatCurrency(product.price * (1 - (product.discount || 0) / 100))}</span>
-                        {product.discount && (
-                          <span className="text-xs text-muted-foreground line-through">
-                            {formatCurrency(product.price)}
-                          </span>
+                filteredProducts.slice(0, 10).map((product) => {
+                  // Get the stock count, defaulting to a random number if undefined
+                  const stockCount = product.stock ?? Math.floor(Math.random() * 100);
+                  const stockStatus = getStockStatus(stockCount);
+                  
+                  return (
+                    <TableRow key={product.id}>
+                      <TableCell>
+                        <div className="h-10 w-10 rounded overflow-hidden">
+                          <img
+                            src={product.images[0]}
+                            alt={product.name}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="font-medium">{product.name}</TableCell>
+                      <TableCell>{product.category}</TableCell>
+                      <TableCell>
+                        <div className="flex flex-col">
+                          <span>{formatCurrency(product.price * (1 - (product.discount || 0) / 100))}</span>
+                          {product.discount && (
+                            <span className="text-xs text-muted-foreground line-through">
+                              {formatCurrency(product.price)}
+                            </span>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>{stockCount}</TableCell>
+                      <TableCell>
+                        <span className={`px-2 py-1 rounded-full text-xs ${stockStatus.className}`}>
+                          {stockStatus.label}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        {product.bnplEligible ? (
+                          <Check className="h-5 w-5 text-green-500" />
+                        ) : (
+                          <X className="h-5 w-5 text-muted-foreground" />
                         )}
-                      </div>
-                    </TableCell>
-                    <TableCell>{product.stock || Math.floor(Math.random() * 100)}</TableCell>
-                    <TableCell>
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        product.stock > 10 ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"
-                      }`}>
-                        {product.stock > 10 ? "In Stock" : "Low Stock"}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      {product.bnplEligible ? (
-                        <Check className="h-5 w-5 text-green-500" />
-                      ) : (
-                        <X className="h-5 w-5 text-muted-foreground" />
-                      )}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex justify-end gap-2">
-                        <Button variant="ghost" size="icon">
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="text-destructive">
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button variant="ghost" size="icon">
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="text-destructive">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>

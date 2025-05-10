@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   name: string;
@@ -30,6 +29,7 @@ export interface Product {
   rating: number;
   reviews: number;
   discount?: number;
+  stock?: number; // Added stock as an optional property
 }
 
 export interface EMI {
@@ -132,7 +132,8 @@ export const products: Product[] = [
     bnplEligible: true,
     rating: 4.8,
     reviews: 243,
-    discount: 10
+    discount: 10,
+    stock: 45 // Adding stock values to product objects
   },
   {
     id: 'prod2',
@@ -147,7 +148,8 @@ export const products: Product[] = [
     category: 'electronics',
     bnplEligible: true,
     rating: 4.5,
-    reviews: 187
+    reviews: 187,
+    stock: 23
   },
   {
     id: 'prod3',
@@ -163,7 +165,8 @@ export const products: Product[] = [
     bnplEligible: true,
     rating: 4.7,
     reviews: 96,
-    discount: 15
+    discount: 15,
+    stock: 15
   },
   {
     id: 'prod4',
@@ -178,7 +181,8 @@ export const products: Product[] = [
     category: 'beauty',
     bnplEligible: true,
     rating: 4.6,
-    reviews: 132
+    reviews: 132,
+    stock: 42
   },
   {
     id: 'prod5',
@@ -193,7 +197,8 @@ export const products: Product[] = [
     category: 'grocery',
     bnplEligible: false,
     rating: 4.4,
-    reviews: 67
+    reviews: 67,
+    stock: 8
   },
   {
     id: 'prod6',
@@ -209,7 +214,8 @@ export const products: Product[] = [
     bnplEligible: true,
     rating: 4.3,
     reviews: 109,
-    discount: 20
+    discount: 20,
+    stock: 31
   }
 ];
 
