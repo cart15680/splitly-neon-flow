@@ -7,13 +7,13 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useCallback } from "react";
 
 const OnboardingPage = () => {
   const navigate = useNavigate();
   const [activeSlide, setActiveSlide] = useState(0);
+  const [api, setApi] = useState<any>();
   
   const slides = [
     {
@@ -41,9 +41,14 @@ const OnboardingPage = () => {
     if (activeSlide === slides.length - 1) {
       navigate("/login");
     } else {
-      setActiveSlide((prev) => prev + 1);
+      api?.scrollNext();
     }
   };
+
+  const onSelect = useCallback(() => {
+    if (!api) return;
+    setActiveSlide(api.selectedScrollSnap());
+  }, [api]);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -58,8 +63,8 @@ const OnboardingPage = () => {
       <div className="flex-1 flex flex-col items-center justify-center px-6">
         <Carousel 
           className="w-full max-w-md" 
-          onSelect={(index) => setActiveSlide(index)}
-          defaultIndex={activeSlide}
+          setApi={setApi}
+          onSelect={onSelect}
         >
           <CarouselContent>
             {slides.map((slide, index) => (
@@ -84,6 +89,7 @@ const OnboardingPage = () => {
               className={`h-2 rounded-full transition-all ${
                 activeSlide === index ? "w-8 bg-primary" : "w-2 bg-muted"
               }`}
+              onClick={() => api?.scrollTo(index)}
             ></div>
           ))}
         </div>
@@ -93,7 +99,7 @@ const OnboardingPage = () => {
       <div className="p-8 flex justify-between items-center">
         <Button
           variant="ghost"
-          onClick={() => setActiveSlide((prev) => Math.max(0, prev - 1))}
+          onClick={() => api?.scrollPrev()}
           disabled={activeSlide === 0}
           className="text-muted-foreground"
         >
