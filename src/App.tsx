@@ -31,6 +31,16 @@ import ContactPage from "./pages/support/ContactPage";
 import ReferralPage from "./pages/referral/ReferralPage";
 import SplashScreen from "./pages/onboarding/SplashScreen";
 
+// Seller pages
+import SellerDashboard from "./pages/seller/SellerDashboard";
+import SellerProducts from "./pages/seller/SellerProducts";
+import SellerOrders from "./pages/seller/SellerOrders";
+import SellerAnalytics from "./pages/seller/SellerAnalytics";
+import SellerFinancials from "./pages/seller/SellerFinancials";
+import SellerProfile from "./pages/seller/SellerProfile";
+import SellerSettings from "./pages/seller/SellerSettings";
+import SellerSupport from "./pages/seller/SellerSupport";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -65,6 +75,17 @@ const App = () => (
           <Route path="/faqs" element={<FaqPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/refer" element={<ReferralPage />} />
+          
+          {/* Seller routes */}
+          <Route path="/seller/dashboard" element={<SellerDashboard />} />
+          <Route path="/seller/products" element={<SellerProducts />} />
+          <Route path="/seller/orders" element={<SellerOrders />} />
+          <Route path="/seller/analytics" element={<SellerAnalytics />} />
+          <Route path="/seller/financials" element={<SellerFinancials />} />
+          <Route path="/seller/profile" element={<SellerProfile />} />
+          <Route path="/seller/settings" element={<SellerSettings />} />
+          <Route path="/seller/support" element={<SellerSupport />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

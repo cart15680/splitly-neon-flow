@@ -5,6 +5,7 @@ import { Eye, EyeOff, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
 
 const LoginPage = () => {
@@ -14,15 +15,22 @@ const LoginPage = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [userType, setUserType] = useState<"buyer" | "seller">("buyer");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Simulate login (would be API call in real app)
     toast({
       title: "Login Successful",
-      description: "Welcome back to Splitly",
+      description: `Welcome back to Splitly as a ${userType}`,
     });
-    navigate("/dashboard");
+
+    // Navigate based on user type
+    if (userType === "buyer") {
+      navigate("/dashboard");
+    } else {
+      navigate("/seller/dashboard"); 
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -40,9 +48,27 @@ const LoginPage = () => {
               alt="Splitly Logo"
               className="w-20 h-20 mb-4"
             />
-            <h1 className="text-3xl font-bold text-foreground">Welcome back</h1>
-            <p className="text-muted-foreground mt-2">Log in to your Splitly account</p>
+            <h1 className="text-3xl font-bold text-foreground">Welcome to Splitly</h1>
+            <p className="text-muted-foreground mt-2">Shop now, pay later</p>
           </div>
+
+          {/* User Type Selector */}
+          <Tabs 
+            defaultValue="buyer" 
+            className="w-full mb-6"
+            onValueChange={(value) => setUserType(value as "buyer" | "seller")}
+          >
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="buyer">Buyer</TabsTrigger>
+              <TabsTrigger value="seller">Seller</TabsTrigger>
+            </TabsList>
+            <TabsContent value="buyer" className="mt-2 text-center text-sm text-muted-foreground">
+              Log in as a buyer to shop and use pay later services
+            </TabsContent>
+            <TabsContent value="seller" className="mt-2 text-center text-sm text-muted-foreground">
+              Log in as a seller to manage your store and products
+            </TabsContent>
+          </Tabs>
 
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -135,7 +161,7 @@ const LoginPage = () => {
               type="submit"
               className="w-full neon-glow"
             >
-              Log In
+              Log In as {userType === "buyer" ? "Buyer" : "Seller"}
             </Button>
 
             {/* Social Login */}

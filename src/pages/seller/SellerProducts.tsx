@@ -1,0 +1,166 @@
+
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import SellerLayout from "@/components/seller/SellerLayout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from "@/components/ui/table";
+import { 
+  Plus, 
+  Search, 
+  Edit, 
+  Trash2, 
+  Filter, 
+  ArrowUpDown, 
+  Check, 
+  X, 
+  AlertCircle 
+} from "lucide-react";
+import { formatCurrency } from "@/utils/format";
+import { products } from "@/data/dummyData";
+
+const SellerProducts = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // Filter products based on search term
+  const filteredProducts = products.filter((product) => 
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <SellerLayout title="Manage Products">
+      {/* Header actions */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+        <h2 className="text-2xl font-bold">Your Products</h2>
+        <Button className="neon-glow">
+          <Plus className="mr-2 h-4 w-4" />
+          Add New Product
+        </Button>
+      </div>
+
+      {/* Search and filter */}
+      <Card className="mb-6">
+        <CardContent className="p-4">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button variant="outline" className="md:w-auto">
+              <Filter className="mr-2 h-4 w-4" />
+              Filter
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Products table */}
+      <Card>
+        <div className="rounded-md border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[80px]">Image</TableHead>
+                <TableHead>
+                  <div className="flex items-center">
+                    Product
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </div>
+                </TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>
+                  <div className="flex items-center">
+                    Price
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                  </div>
+                </TableHead>
+                <TableHead>Stock</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Splitly EMI</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredProducts.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-6">
+                    <div className="flex flex-col items-center justify-center">
+                      <AlertCircle className="h-10 w-10 text-muted-foreground mb-2" />
+                      <p className="text-muted-foreground">No products found</p>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredProducts.slice(0, 10).map((product) => (
+                  <TableRow key={product.id}>
+                    <TableCell>
+                      <div className="h-10 w-10 rounded overflow-hidden">
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell>{product.category}</TableCell>
+                    <TableCell>
+                      <div className="flex flex-col">
+                        <span>{formatCurrency(product.price * (1 - (product.discount || 0) / 100))}</span>
+                        {product.discount && (
+                          <span className="text-xs text-muted-foreground line-through">
+                            {formatCurrency(product.price)}
+                          </span>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>{product.stock || Math.floor(Math.random() * 100)}</TableCell>
+                    <TableCell>
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        product.stock > 10 ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"
+                      }`}>
+                        {product.stock > 10 ? "In Stock" : "Low Stock"}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      {product.bnplEligible ? (
+                        <Check className="h-5 w-5 text-green-500" />
+                      ) : (
+                        <X className="h-5 w-5 text-muted-foreground" />
+                      )}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button variant="ghost" size="icon">
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </Card>
+    </SellerLayout>
+  );
+};
+
+export default SellerProducts;

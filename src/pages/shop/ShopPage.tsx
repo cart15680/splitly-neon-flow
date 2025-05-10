@@ -6,13 +6,15 @@ import { Input } from "@/components/ui/input";
 import { Search, ArrowRight } from "lucide-react";
 import { categories, merchants, products } from "@/data/dummyData";
 import { formatCurrency } from "@/utils/format";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ShopPage = () => {
   // Get featured merchants
   const featuredMerchants = merchants.filter(merchant => merchant.featured);
+  const isMobile = useIsMobile();
 
   return (
-    <Layout title="Shop">
+    <Layout title="Splitly Shop">
       <div className="p-4 pb-20 md:p-6 space-y-6">
         {/* Search bar */}
         <div className="relative">
@@ -26,7 +28,7 @@ const ShopPage = () => {
         {/* Categories */}
         <div>
           <h2 className="text-lg font-semibold mb-3">Categories</h2>
-          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+          <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {categories.map((category) => (
               <Link to={`/shop/${category.id}`} key={category.id}>
                 <Card className="h-24 neon-glow">
@@ -43,12 +45,12 @@ const ShopPage = () => {
         {/* Featured Merchants */}
         <div>
           <h2 className="text-lg font-semibold mb-3">Featured Merchants</h2>
-          <div className="flex overflow-x-auto pb-2 gap-4 scrollbar-none">
-            {featuredMerchants.map((merchant) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
+            {featuredMerchants.slice(0, isMobile ? 4 : 6).map((merchant) => (
               <Link
                 to={`/shop/${merchant.category}?merchant=${merchant.id}`}
                 key={merchant.id}
-                className="min-w-[140px] w-36"
+                className="min-w-0"
               >
                 <Card className="neon-glow h-full">
                   <CardContent className="p-3 flex flex-col items-center justify-center">
@@ -59,12 +61,20 @@ const ShopPage = () => {
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="font-medium text-sm text-center">{merchant.name}</p>
+                    <p className="font-medium text-sm text-center line-clamp-1">{merchant.name}</p>
                   </CardContent>
                 </Card>
               </Link>
             ))}
           </div>
+          {featuredMerchants.length > (isMobile ? 4 : 6) && (
+            <div className="mt-2 flex justify-end">
+              <Link to="/shop/all-merchants" className="text-primary text-sm flex items-center">
+                View All
+                <ArrowRight className="h-4 w-4 ml-1" />
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Featured Products */}
@@ -78,7 +88,7 @@ const ShopPage = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.slice(0, 4).map((product) => (
+            {products.slice(0, isMobile ? 4 : 8).map((product) => (
               <Link to={`/product/${product.id}`} key={product.id}>
                 <Card className="h-full neon-glow overflow-hidden">
                   <div className="h-36 overflow-hidden">
@@ -89,7 +99,7 @@ const ShopPage = () => {
                     />
                     {product.bnplEligible && (
                       <div className="absolute top-2 right-2 bg-primary/90 text-xs rounded-full px-2 py-1 text-primary-foreground">
-                        EMI Available
+                        Splitly EMI
                       </div>
                     )}
                   </div>
@@ -121,13 +131,18 @@ const ShopPage = () => {
 
         {/* Recent Viewed */}
         <div>
-          <h2 className="text-lg font-semibold mb-3">Recently Viewed</h2>
-          <div className="flex overflow-x-auto pb-2 gap-4 scrollbar-none">
-            {products.slice(2, 6).map((product) => (
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="text-lg font-semibold">Recently Viewed</h2>
+            <Link to="/history" className="text-primary text-sm flex items-center">
+              See All
+              <ArrowRight className="h-4 w-4 ml-1" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {products.slice(2, 2 + (isMobile ? 4 : 6)).map((product) => (
               <Link
                 to={`/product/${product.id}`}
                 key={product.id}
-                className="min-w-[160px] max-w-[160px]"
               >
                 <Card className="neon-glow h-full">
                   <div className="h-28 overflow-hidden">

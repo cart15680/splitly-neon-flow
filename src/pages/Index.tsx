@@ -7,9 +7,9 @@ const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Simulate a delay before redirecting to the splash screen
+    // Redirect directly to login instead of splash screen
     const timer = setTimeout(() => {
-      navigate('/splash');
+      navigate('/login');
       toast({
         title: "Welcome to Splitly",
         description: "Shop now, pay later with ease",
