@@ -76,8 +76,14 @@ const SellerProducts = () => {
       description: `QR Code detected: ${result}`,
     });
     
-    // Try to find product with matching ID
-    const scannedProduct = products.find(p => p.id === result || p.id === parseInt(result));
+    // Fix the comparison by converting result to a number when comparing with product.id
+    // Only if product.id is a number, otherwise compare as strings
+    const scannedProduct = products.find(p => {
+      if (typeof p.id === 'number') {
+        return p.id === parseInt(result);
+      }
+      return p.id === result;
+    });
     
     if (scannedProduct) {
       setSearchTerm(scannedProduct.name);
