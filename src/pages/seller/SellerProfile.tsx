@@ -8,9 +8,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Edit, CheckCircle, Upload } from "lucide-react";
+import { Edit, CheckCircle, Upload, ScanLine } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import DocumentScanner from "@/components/shared/DocumentScanner";
+import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const SellerProfile = () => {
+  const navigate = useNavigate();
   // Mock seller data
   const [seller, setSeller] = useState({
     name: "TechWorld Store",
@@ -27,15 +32,36 @@ const SellerProfile = () => {
     rating: 4.8
   });
 
+  const [showScanner, setShowScanner] = useState<boolean>(false);
+  const [scanDocumentType, setScanDocumentType] = useState<string | null>(null);
+
+  const handleScanComplete = (imageData: string) => {
+    toast({
+      title: "Document Scanned",
+      description: "Your document has been successfully scanned and uploaded."
+    });
+    setShowScanner(false);
+  };
+
+  const handleStartKYC = () => {
+    navigate("/profile/qatar-kyc");
+  };
+
   return (
     <SellerLayout title="Seller Profile">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <h2 className="text-2xl font-bold">Your Profile</h2>
-        <Button>
-          <Edit className="mr-2 h-4 w-4" />
-          Edit Profile
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={handleStartKYC}>
+            <ScanLine className="mr-2 h-4 w-4" />
+            Verify KYC
+          </Button>
+          <Button>
+            <Edit className="mr-2 h-4 w-4" />
+            Edit Profile
+          </Button>
+        </div>
       </div>
 
       {/* Profile Overview */}
@@ -168,10 +194,72 @@ const SellerProfile = () => {
                 defaultValue={seller.description} 
               />
             </div>
-            <Button className="neon-glow">Save Changes</Button>
+            <div className="flex justify-between">
+              <Button variant="outline" onClick={() => setShowScanner(true)}>
+                <ScanLine className="mr-2 h-4 w-4" />
+                Scan Documents
+              </Button>
+              <Button className="neon-glow">Save Changes</Button>
+            </div>
           </form>
         </CardContent>
       </Card>
+
+      {/* Document Scanner Dialog */}
+      <Dialog open={showScanner} onOpenChange={setShowScanner}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Document Scanner</DialogTitle>
+            <DialogDescription>
+              Scan your business documents to update your profile
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-3">
+              <Button 
+                variant="outline" 
+                className="flex flex-col h-auto p-4" 
+                onClick={() => setScanDocumentType("qid-front")}
+              >
+                <ScanLine className="h-8 w-8 mb-2" />
+                <span>QID</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex flex-col h-auto p-4" 
+                onClick={() => setScanDocumentType("cr-copy")}
+              >
+                <ScanLine className="h-8 w-8 mb-2" />
+                <span>CR Copy</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex flex-col h-auto p-4" 
+                onClick={() => setScanDocumentType("bank-letter")}
+              >
+                <ScanLine className="h-8 w-8 mb-2" />
+                <span>Bank Letter</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                className="flex flex-col h-auto p-4" 
+                onClick={() => navigate("/profile/qatar-kyc")}
+              >
+                <ScanLine className="h-8 w-8 mb-2" />
+                <span>Full KYC</span>
+              </Button>
+            </div>
+            
+            {scanDocumentType && (
+              <DocumentScanner 
+                documentType={scanDocumentType as any}
+                onScanComplete={handleScanComplete}
+                onClose={() => setScanDocumentType(null)}
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </SellerLayout>
   );
 };

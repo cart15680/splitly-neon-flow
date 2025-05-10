@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ArrowLeft, CreditCard, AlertCircle } from "lucide-react";
+import { ArrowLeft, CreditCard, AlertCircle, Wallet, QrCode } from "lucide-react";
 import { products, paymentMethods } from "@/data/dummyData";
 import { formatCurrency, formatDate } from "@/utils/format";
 import {
@@ -21,6 +21,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import QatarPaymentMethods from "@/components/payment/QatarPaymentMethods";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const PaymentConfirmationPage = () => {
   const navigate = useNavigate();
@@ -29,8 +32,13 @@ const PaymentConfirmationPage = () => {
 
   const product = products.find(p => p.id === productId);
   const [paymentMethod, setPaymentMethod] = useState("upi");
+  const [qatarPaymentMethod, setQatarPaymentMethod] = useState("qpay");
+  const [paymentRegion, setPaymentRegion] = useState("qatar");
   const [pin, setPin] = useState("");
   const [showPinModal, setShowPinModal] = useState(false);
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
 
   if (!product || !totalAmount) {
     navigate("/shop");
@@ -57,6 +65,30 @@ const PaymentConfirmationPage = () => {
         totalAmount
       }
     });
+  };
+
+  const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Format card number with spaces
+    const value = e.target.value.replace(/\s/g, "");
+    let formatted = "";
+    
+    for (let i = 0; i < value.length && i < 16; i++) {
+      if (i > 0 && i % 4 === 0) {
+        formatted += " ";
+      }
+      formatted += value[i];
+    }
+    
+    setCardNumber(formatted);
+  };
+
+  const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "");
+    if (value.length <= 2) {
+      setCardExpiry(value);
+    } else if (value.length <= 4) {
+      setCardExpiry(`${value.slice(0, 2)}/${value.slice(2)}`);
+    }
   };
 
   return (
@@ -114,52 +146,184 @@ const PaymentConfirmationPage = () => {
             </CardContent>
           </Card>
           
-          {/* Payment Methods */}
-          <h3 className="font-medium mb-2">Select Payment Method</h3>
-          <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-3">
-            {paymentMethods.map((method) => (
-              <Label
-                key={method.id}
-                htmlFor={method.id}
-                className={`flex items-center p-3 border rounded-lg cursor-pointer ${
-                  paymentMethod === method.id 
-                    ? "border-primary bg-primary/5" 
-                    : "border-border"
-                }`}
-              >
-                <RadioGroupItem value={method.id} id={method.id} className="mr-3" />
-                <div className="flex items-center">
-                  <span className="text-lg mr-2">{method.icon}</span>
-                  <span>{method.name}</span>
-                </div>
-              </Label>
-            ))}
-          </RadioGroup>
-          
-          {/* Selected Payment Details */}
-          {paymentMethod === "upi" && (
-            <Card className="mt-4">
-              <CardContent className="p-4">
-                <p className="font-medium mb-2">UPI Details</p>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">UPI ID</span>
-                  <span>alex.johnson@okbank</span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-          
-          {paymentMethod === "card" && (
-            <Card className="mt-4">
-              <CardContent className="p-4">
-                <p className="font-medium mb-2">Card Details</p>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Card Number</span>
-                  <span>**** **** **** 4321</span>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          {/* Payment Regions */}
+          <Tabs defaultValue="qatar" value={paymentRegion} onValueChange={setPaymentRegion} className="mb-6">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="qatar">Qatar Payments</TabsTrigger>
+              <TabsTrigger value="international">International</TabsTrigger>
+            </TabsList>
+            <TabsContent value="qatar" className="mt-4">
+              <QatarPaymentMethods 
+                selectedMethod={qatarPaymentMethod}
+                onSelectMethod={setQatarPaymentMethod}
+              />
+              
+              {/* Qatar Payment Details */}
+              {qatarPaymentMethod === "qpay" && (
+                <Card className="mt-4">
+                  <CardContent className="p-4">
+                    <div className="space-y-4">
+                      <h3 className="font-medium">QPay Card Details</h3>
+                      <div className="space-y-2">
+                        <Label htmlFor="card-number">Card Number</Label>
+                        <Input
+                          id="card-number"
+                          placeholder="0000 0000 0000 0000"
+                          value={cardNumber}
+                          onChange={handleCardNumberChange}
+                          maxLength={19}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="expiry">Expiry Date</Label>
+                          <Input
+                            id="expiry"
+                            placeholder="MM/YY"
+                            value={cardExpiry}
+                            onChange={handleExpiryChange}
+                            maxLength={5}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="cvv">CVV</Label>
+                          <Input
+                            id="cvv"
+                            type="password"
+                            placeholder="***"
+                            maxLength={3}
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {qatarPaymentMethod === "sadad" && (
+                <Card className="mt-4">
+                  <CardContent className="p-4 text-center">
+                    <div className="flex flex-col items-center py-4">
+                      <Wallet className="h-12 w-12 text-primary mb-4" />
+                      <h3 className="font-medium mb-1">Pay with SADAD Qatar</h3>
+                      <p className="text-sm text-muted-foreground mb-4">You'll be redirected to SADAD payment page to complete your transaction.</p>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {qatarPaymentMethod === "fatora" && (
+                <Card className="mt-4">
+                  <CardContent className="p-4 text-center">
+                    <div className="flex flex-col items-center py-4">
+                      <QrCode className="h-12 w-12 text-primary mb-4" />
+                      <h3 className="font-medium mb-1">Fatora QR Code Payment</h3>
+                      <p className="text-sm text-muted-foreground mb-2">Scan the QR code using your Fatora app</p>
+                      <div className="border-2 border-dashed p-8 rounded-md mb-4 mt-2">
+                        <div className="h-40 w-40 bg-muted flex items-center justify-center">
+                          <p className="text-xs text-muted-foreground">QR Code will appear here</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {qatarPaymentMethod === "meeza" && (
+                <Card className="mt-4">
+                  <CardContent className="p-4">
+                    <div className="space-y-4">
+                      <h3 className="font-medium">Meeza Card Details</h3>
+                      <div className="space-y-2">
+                        <Label htmlFor="meeza-number">Meeza Card Number</Label>
+                        <Input
+                          id="meeza-number"
+                          placeholder="0000 0000 0000 0000"
+                          value={cardNumber}
+                          onChange={handleCardNumberChange}
+                          maxLength={19}
+                        />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="meeza-expiry">Expiry Date</Label>
+                          <Input
+                            id="meeza-expiry"
+                            placeholder="MM/YY"
+                            value={cardExpiry}
+                            onChange={handleExpiryChange}
+                            maxLength={5}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="meeza-cvv">CVV</Label>
+                          <Input
+                            id="meeza-cvv"
+                            type="password"
+                            placeholder="***"
+                            maxLength={3}
+                            value={cvv}
+                            onChange={(e) => setCvv(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+            
+            <TabsContent value="international" className="mt-4">
+              {/* Payment Methods */}
+              <h3 className="font-medium mb-2">Select Payment Method</h3>
+              <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod} className="space-y-3">
+                {paymentMethods.map((method) => (
+                  <Label
+                    key={method.id}
+                    htmlFor={method.id}
+                    className={`flex items-center p-3 border rounded-lg cursor-pointer ${
+                      paymentMethod === method.id 
+                        ? "border-primary bg-primary/5" 
+                        : "border-border"
+                    }`}
+                  >
+                    <RadioGroupItem value={method.id} id={method.id} className="mr-3" />
+                    <div className="flex items-center">
+                      <span className="text-lg mr-2">{method.icon}</span>
+                      <span>{method.name}</span>
+                    </div>
+                  </Label>
+                ))}
+              </RadioGroup>
+              
+              {/* Selected Payment Details */}
+              {paymentMethod === "upi" && (
+                <Card className="mt-4">
+                  <CardContent className="p-4">
+                    <p className="font-medium mb-2">UPI Details</p>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">UPI ID</span>
+                      <span>alex.johnson@okbank</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              
+              {paymentMethod === "card" && (
+                <Card className="mt-4">
+                  <CardContent className="p-4">
+                    <p className="font-medium mb-2">Card Details</p>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Card Number</span>
+                      <span>**** **** **** 4321</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </TabsContent>
+          </Tabs>
         </div>
       </div>
 
@@ -168,6 +332,11 @@ const PaymentConfirmationPage = () => {
         <Button 
           className="w-full neon-glow"
           onClick={handleConfirmPayment}
+          disabled={paymentRegion === "qatar" ? 
+            ((qatarPaymentMethod === "qpay" || qatarPaymentMethod === "meeza") && 
+              (!cardNumber || !cardExpiry || !cvv)) : 
+            false
+          }
         >
           <CreditCard className="h-4 w-4 mr-2" />
           Confirm & Pay {formatCurrency(totalAmount)}

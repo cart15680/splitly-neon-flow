@@ -22,13 +22,25 @@ import {
   ArrowUpDown, 
   Check, 
   X, 
-  AlertCircle 
+  AlertCircle,
+  ScanLine,
+  QrCode
 } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
 import { products } from "@/data/dummyData";
+import QrScanner from "@/components/shared/QrScanner";
+import { toast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 const SellerProducts = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [showScanner, setShowScanner] = useState(false);
   
   // Filter products based on search term
   const filteredProducts = products.filter((product) => 
@@ -58,6 +70,26 @@ const SellerProducts = () => {
     }
   };
 
+  const handleScanSuccess = (result: string) => {
+    toast({
+      title: "Product Scanned",
+      description: `QR Code detected: ${result}`,
+    });
+    
+    // Try to find product with matching ID
+    const scannedProduct = products.find(p => p.id === result || p.id === parseInt(result));
+    
+    if (scannedProduct) {
+      setSearchTerm(scannedProduct.name);
+      toast({
+        title: "Product Found",
+        description: `Found "${scannedProduct.name}" in your inventory`,
+      });
+    }
+    
+    setShowScanner(false);
+  };
+
   return (
     <SellerLayout title="Manage Products">
       {/* Header actions */}
@@ -82,10 +114,16 @@ const SellerProducts = () => {
                 className="pl-10"
               />
             </div>
-            <Button variant="outline" className="md:w-auto">
-              <Filter className="mr-2 h-4 w-4" />
-              Filter
-            </Button>
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={() => setShowScanner(true)}>
+                <ScanLine className="mr-2 h-4 w-4" />
+                Scan Product
+              </Button>
+              <Button variant="outline">
+                <Filter className="mr-2 h-4 w-4" />
+                Filter
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
@@ -176,6 +214,9 @@ const SellerProducts = () => {
                           <Button variant="ghost" size="icon" className="text-destructive">
                             <Trash2 className="h-4 w-4" />
                           </Button>
+                          <Button variant="ghost" size="icon">
+                            <QrCode className="h-4 w-4" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -186,6 +227,19 @@ const SellerProducts = () => {
           </Table>
         </div>
       </Card>
+
+      {/* QR Scanner Dialog */}
+      <Dialog open={showScanner} onOpenChange={setShowScanner}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Scan Product QR Code</DialogTitle>
+            <DialogDescription>
+              Point your camera at a product QR code to quickly find it in your inventory
+            </DialogDescription>
+          </DialogHeader>
+          <QrScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />
+        </DialogContent>
+      </Dialog>
     </SellerLayout>
   );
 };
