@@ -24,11 +24,15 @@ import {
   X, 
   AlertCircle,
   ScanLine,
-  QrCode
+  QrCode,
+  Send,
+  CreditCard
 } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
 import { products } from "@/data/dummyData";
 import QrScanner from "@/components/shared/QrScanner";
+import PaymentScanner from "@/components/seller/PaymentScanner";
+import PaymentRequest from "@/components/seller/PaymentRequest";
 import { toast } from "@/hooks/use-toast";
 import {
   Dialog,
@@ -41,6 +45,9 @@ import {
 const SellerProducts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showScanner, setShowScanner] = useState(false);
+  const [showPaymentScanner, setShowPaymentScanner] = useState(false);
+  const [showPaymentRequest, setShowPaymentRequest] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<{name: string, price: number} | null>(null);
   
   // Filter products based on search term
   const filteredProducts = products.filter((product) => 
@@ -95,16 +102,31 @@ const SellerProducts = () => {
     
     setShowScanner(false);
   };
+  
+  const handleRequestPayment = (product: {name: string, price: number}) => {
+    setSelectedProduct(product);
+    setShowPaymentRequest(true);
+  };
 
   return (
     <SellerLayout title="Manage Products">
       {/* Header actions */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <h2 className="text-2xl font-bold">Your Products</h2>
-        <Button className="neon-glow">
-          <Plus className="mr-2 h-4 w-4" />
-          Add New Product
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant="outline"
+            onClick={() => setShowPaymentScanner(true)}
+            className="flex items-center gap-2"
+          >
+            <CreditCard className="h-4 w-4" />
+            Scan Payment
+          </Button>
+          <Button className="neon-glow">
+            <Plus className="mr-2 h-4 w-4" />
+            Add New Product
+          </Button>
+        </div>
       </div>
 
       {/* Search and filter */}
@@ -214,6 +236,17 @@ const SellerProducts = () => {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={() => handleRequestPayment({
+                              name: product.name,
+                              price: product.price * (1 - (product.discount || 0) / 100)
+                            })}
+                            title="Request payment"
+                          >
+                            <Send className="h-4 w-4" />
+                          </Button>
                           <Button variant="ghost" size="icon">
                             <Edit className="h-4 w-4" />
                           </Button>
@@ -246,6 +279,20 @@ const SellerProducts = () => {
           <QrScanner onScanSuccess={handleScanSuccess} onClose={() => setShowScanner(false)} />
         </DialogContent>
       </Dialog>
+      
+      {/* Payment Scanner Dialog */}
+      <PaymentScanner
+        open={showPaymentScanner}
+        onClose={() => setShowPaymentScanner(false)}
+      />
+      
+      {/* Payment Request Dialog */}
+      <PaymentRequest
+        open={showPaymentRequest}
+        onClose={() => setShowPaymentRequest(false)}
+        productName={selectedProduct?.name}
+        productPrice={selectedProduct?.price}
+      />
     </SellerLayout>
   );
 };
