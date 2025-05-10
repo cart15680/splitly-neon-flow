@@ -9,7 +9,7 @@ import {
   ChevronRight,
   CreditCard,
   UserIcon,
-  Bank,
+  Building,
   Shield,
   Settings,
   LogOut,
@@ -43,7 +43,7 @@ const ProfilePage = () => {
       link: "/kyc"
     },
     {
-      icon: <Bank className="h-5 w-5 text-primary" />,
+      icon: <Building className="h-5 w-5 text-primary" />,
       title: "Bank Account",
       description: "Manage linked bank accounts",
       status: user.bankStatus === "verified" ? "Verified" : "Not Added",
