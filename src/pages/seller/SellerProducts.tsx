@@ -155,9 +155,9 @@ const SellerProducts = () => {
         </CardContent>
       </Card>
 
-      {/* Products table - Now with responsive handling */}
+      {/* Products table with improved mobile responsiveness */}
       <Card className="overflow-hidden">
-        <div className="rounded-md border overflow-x-auto">
+        <div className="rounded-md border overflow-x-auto max-w-full">
           <Table>
             <TableHeader>
               <TableRow>
@@ -217,7 +217,7 @@ const SellerProducts = () => {
                               className="h-full w-full object-cover"
                             />
                           </div>
-                          <span className="line-clamp-2">{product.name}</span>
+                          <span className="line-clamp-2 md:max-w-[150px] lg:max-w-[250px]">{product.name}</span>
                         </div>
                         <span className="text-xs text-muted-foreground md:hidden block mt-1">
                           {product.category}

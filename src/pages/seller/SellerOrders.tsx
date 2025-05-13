@@ -143,9 +143,9 @@ const SellerOrders = () => {
         </CardContent>
       </Card>
 
-      {/* Orders table */}
+      {/* Orders table with improved mobile responsiveness */}
       <Card>
-        <div className="rounded-md border">
+        <div className="rounded-md border overflow-x-auto max-w-full">
           <Table>
             <TableHeader>
               <TableRow>
@@ -156,8 +156,8 @@ const SellerOrders = () => {
                   </div>
                 </TableHead>
                 <TableHead>Customer</TableHead>
-                <TableHead>Product</TableHead>
-                <TableHead>
+                <TableHead className="hidden md:table-cell">Product</TableHead>
+                <TableHead className="hidden sm:table-cell">
                   <div className="flex items-center">
                     Date
                     <ArrowUpDown className="ml-2 h-4 w-4" />
@@ -170,7 +170,7 @@ const SellerOrders = () => {
                   </div>
                 </TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Payment</TableHead>
+                <TableHead className="hidden sm:table-cell">Payment</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -193,18 +193,22 @@ const SellerOrders = () => {
                         <Avatar className="h-8 w-8">
                           <AvatarFallback>{order.customerInitial}</AvatarFallback>
                         </Avatar>
-                        {order.customer}
+                        <span className="hidden sm:inline">{order.customer}</span>
+                        <span className="sm:hidden">{order.customerInitial}</span>
                       </div>
+                      <span className="md:hidden text-xs text-muted-foreground block mt-1 line-clamp-1">
+                        {order.product}
+                      </span>
                     </TableCell>
-                    <TableCell className="max-w-[200px] truncate">{order.product}</TableCell>
-                    <TableCell>{order.date}</TableCell>
+                    <TableCell className="hidden md:table-cell max-w-[200px] truncate">{order.product}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{order.date}</TableCell>
                     <TableCell>{formatCurrency(order.amount)}</TableCell>
                     <TableCell>
                       <Badge className={getStatusBadge(order.status)}>
                         {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                       </Badge>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden sm:table-cell">
                       <div className="flex flex-col">
                         <span className="text-xs font-medium">{order.payment}</span>
                         <span className={`text-xs ${
@@ -221,7 +225,7 @@ const SellerOrders = () => {
                         <Button variant="ghost" size="icon">
                           <Eye className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" className="hidden sm:inline-flex">
                           <Download className="h-4 w-4" />
                         </Button>
                       </div>

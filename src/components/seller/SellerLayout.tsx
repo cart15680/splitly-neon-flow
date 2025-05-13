@@ -1,6 +1,6 @@
 
 import { ReactNode } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Home, 
   Package, 
@@ -12,13 +12,15 @@ import {
   HelpCircle, 
   LogOut, 
   Menu, 
-  X
+  Bell
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { toast } from "@/hooks/use-toast";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface SellerLayoutProps {
   children: ReactNode;
@@ -38,6 +40,7 @@ const navItems = [
 
 const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const isMobile = useIsMobile();
 
@@ -46,6 +49,21 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
     name: "Merchant Store",
     email: "store@example.com",
     avatar: "https://api.dicebear.com/6.x/shapes/svg?seed=store",
+  };
+  
+  const handleLogout = () => {
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account",
+    });
+    navigate("/login");
+  };
+
+  const handleNotificationClick = () => {
+    toast({
+      title: "Notifications",
+      description: "You have 2 new seller notifications",
+    });
   };
   
   // Sidebar content component for reuse
@@ -101,7 +119,7 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
             <p className="font-medium text-sm">{seller.name}</p>
             <p className="text-xs text-muted-foreground">{seller.email}</p>
           </div>
-          <Button variant="ghost" size="icon" className="text-destructive">
+          <Button variant="ghost" size="icon" className="text-destructive" onClick={handleLogout}>
             <LogOut size={18} />
           </Button>
         </div>
@@ -145,11 +163,42 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
               <HelpCircle size={16} className="mr-2" />
               Help
             </Button>
+            
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={handleNotificationClick} className="relative">
+                  <Bell size={20} />
+                  <span className="absolute -top-1 -right-1 bg-primary text-xs text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center">
+                    2
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 p-0">
+                <div className="p-4 border-b">
+                  <h3 className="font-semibold">Seller Notifications</h3>
+                </div>
+                <div className="max-h-[300px] overflow-auto">
+                  <div className="p-3 border-b hover:bg-muted/50 cursor-pointer">
+                    <p className="text-sm font-medium">New Order</p>
+                    <p className="text-xs text-muted-foreground">You received a new order #ORD-5599</p>
+                    <p className="text-xs text-muted-foreground mt-1">10 minutes ago</p>
+                  </div>
+                  <div className="p-3 border-b hover:bg-muted/50 cursor-pointer">
+                    <p className="text-sm font-medium">Payment Complete</p>
+                    <p className="text-xs text-muted-foreground">Payment for order #ORD-5598 has been processed</p>
+                    <p className="text-xs text-muted-foreground mt-1">3 hours ago</p>
+                  </div>
+                </div>
+                <div className="p-2 text-center border-t">
+                  <button className="text-xs text-primary font-medium">See all notifications</button>
+                </div>
+              </PopoverContent>
+            </Popover>
           </div>
         </header>
 
         {/* Page content */}
-        <main className="p-4 md:p-6 pb-24">
+        <main className="p-4 md:p-6 pb-24 overflow-x-hidden">
           {children}
         </main>
       </div>
