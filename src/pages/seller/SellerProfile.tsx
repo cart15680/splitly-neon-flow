@@ -28,7 +28,7 @@ const SellerProfile = () => {
     kycStatus: "verified",
     accountCreated: "2020-05-15",
     productCount: 156,
-    totalSales: "₹34,56,789",
+    totalSales: "QAR34,56,789",
     rating: 4.8
   });
 

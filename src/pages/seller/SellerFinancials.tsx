@@ -36,7 +36,7 @@ const SellerFinancials = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground mb-1">Total Revenue</p>
-                <h3 className="text-3xl font-bold">₹24,58,790</h3>
+                <h3 className="text-3xl font-bold">QAR24,58,790</h3>
                 <span className="text-xs text-green-500 font-medium">
                   <ArrowUp className="inline h-3 w-3 mr-0.5" />
                   +18.2% from last month
@@ -54,7 +54,7 @@ const SellerFinancials = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground mb-1">Platform Fees</p>
-                <h3 className="text-3xl font-bold">₹73,764</h3>
+                <h3 className="text-3xl font-bold">QAR73,764</h3>
                 <span className="text-xs text-red-500 font-medium">
                   <ArrowUp className="inline h-3 w-3 mr-0.5" />
                   3% of total revenue
@@ -72,7 +72,7 @@ const SellerFinancials = () => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm font-medium text-muted-foreground mb-1">Available for Withdrawal</p>
-                <h3 className="text-3xl font-bold">₹21,85,026</h3>
+                <h3 className="text-3xl font-bold">QAR21,85,026</h3>
                 <Button size="sm" className="mt-2 h-7 neon-glow">Withdraw</Button>
               </div>
               <div className="p-4 rounded-full bg-primary/10 text-primary">

@@ -11,7 +11,7 @@ const SellerDashboard = () => {
   const stats = [
     {
       title: "Sales Today",
-      value: "₹24,565",
+      value: "QAR24,565",
       change: "+12.5%",
       isPositive: true,
       icon: ShoppingCart,
@@ -27,7 +27,7 @@ const SellerDashboard = () => {
     },
     {
       title: "Pending Payout",
-      value: "₹1,45,225",
+      value: "QAR1,45,225",
       change: "Processing",
       icon: DollarSign,
       color: "bg-yellow-500/10 text-yellow-500"
@@ -43,10 +43,10 @@ const SellerDashboard = () => {
   ];
 
   const recentOrders = [
-    { id: "ORD-5592", customer: "Raj Mehta", product: "Apple iPhone 15", amount: "₹84,900", status: "completed" },
-    { id: "ORD-5591", customer: "Priya Shah", product: "Samsung Galaxy S23", amount: "₹74,999", status: "processing" },
-    { id: "ORD-5590", customer: "Vikram Singh", product: "Sony Headphones", amount: "₹24,990", status: "completed" },
-    { id: "ORD-5589", customer: "Neha Gupta", product: "Bluetooth Speaker", amount: "₹3,499", status: "pending" }
+    { id: "ORD-5592", customer: "Raj Mehta", product: "Apple iPhone 15", amount: "QAR84,900", status: "completed" },
+    { id: "ORD-5591", customer: "Priya Shah", product: "Samsung Galaxy S23", amount: "QAR74,999", status: "processing" },
+    { id: "ORD-5590", customer: "Vikram Singh", product: "Sony Headphones", amount: "QAR24,990", status: "completed" },
+    { id: "ORD-5589", customer: "Neha Gupta", product: "Bluetooth Speaker", amount: "QAR3,499", status: "pending" }
   ];
 
   return (

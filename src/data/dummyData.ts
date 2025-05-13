@@ -71,26 +71,26 @@ export const currentUser: User = {
 };
 
 export const categories = [
-  { id: 'electronics', name: 'Electronics', icon: '💻' },
-  { id: 'fashion', name: 'Fashion', icon: '👕' },
-  { id: 'grocery', name: 'Grocery', icon: '🛒' },
-  { id: 'beauty', name: 'Beauty', icon: '💄' },
-  { id: 'home', name: 'Home', icon: '🏠' },
-  { id: 'sports', name: 'Sports', icon: '🏀' },
+  { id: 'electronics', name: 'Insurance', icon: '🛡️' },
+  { id: 'fashion', name: 'Travel and Tourism', icon: '✈️' },
+  { id: 'grocery', name: 'Home Furniture', icon: '🛋️' },
+  // { id: 'beauty', name: 'Beauty', icon: '💄' },
+  // { id: 'home', name: 'Home', icon: '🏠' },
+  // { id: 'sports', name: 'Sports', icon: '🏀' },
 ];
 
 export const merchants: Merchant[] = [
   { 
     id: 'merchant1', 
-    name: 'TechWorld', 
-    logo: 'https://images.unsplash.com/photo-1596443686812-2f45229eebc3?q=80&w=2532&auto=format&fit=crop&ixlib=rb-4.0.3',
+    name: 'Mall', 
+    logo: 'https://image.similarpng.com/file/similarpng/very-thumbnail/2020/06/Logo-lulu-saudi-hypermarket-free-download-PNG.png',
     category: 'electronics',
     featured: true
   },
   { 
     id: 'merchant2', 
-    name: 'FashionHub', 
-    logo: 'https://images.unsplash.com/photo-1608228088998-57828365d486?q=80&w=2528&auto=format&fit=crop&ixlib=rb-4.0.3',
+    name: 'Gym', 
+    logo: 'https://powerhouse.qa/wp-content/uploads/2023/12/cropped-POWERHOUSE-QATAR-01.png',
     category: 'fashion',
     featured: true
   },

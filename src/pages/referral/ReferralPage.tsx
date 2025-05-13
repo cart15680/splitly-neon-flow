@@ -24,19 +24,19 @@ const ReferralPage = () => {
   const rewardsTiers = [
     {
       count: 5,
-      reward: "₹1,000 cashback",
+      reward: "QAR1,000 cashback",
       description: "When your first 5 referrals sign up and complete KYC",
       completed: true
     },
     {
       count: 10,
-      reward: "₹2,500 cashback",
+      reward: "QAR2,500 cashback",
       description: "When 10 referrals sign up and make their first purchase",
       completed: false
     },
     {
       count: 25,
-      reward: "₹7,500 cashback",
+      reward: "QAR7,500 cashback",
       description: "When 25 referrals sign up and make their first purchase",
       completed: false
     }
@@ -84,7 +84,7 @@ const ReferralPage = () => {
     if (navigator.share) {
       navigator.share({
         title: "Join Splitly with my referral code!",
-        text: `Use my referral code ${referralCode} and get ₹250 bonus when you sign up for Splitly!`,
+        text: `Use my referral code ${referralCode} and get QAR250 bonus when you sign up for Splitly!`,
         url: "https://splitly.com/referral"
       });
     } else {
@@ -102,7 +102,7 @@ const ReferralPage = () => {
               <div className="mb-6 md:mb-0">
                 <h2 className="text-xl font-bold mb-2">Invite Friends & Earn Rewards</h2>
                 <p className="text-muted-foreground mb-4">
-                  Both you and your friend get ₹250 when they join using your code
+                  Both you and your friend get QAR250 when they join using your code
                 </p>
                 
                 <div className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
@@ -167,7 +167,7 @@ const ReferralPage = () => {
           <Card>
             <CardContent className="p-4 text-center">
               <Award className="h-6 w-6 mx-auto text-primary mb-2" />
-              <h3 className="text-xl font-bold">₹{referralStats.totalEarned}</h3>
+              <h3 className="text-xl font-bold">QAR{referralStats.totalEarned}</h3>
               <p className="text-xs text-muted-foreground">Total Earned</p>
             </CardContent>
           </Card>
@@ -296,7 +296,7 @@ const ReferralPage = () => {
                 <div>
                   <h3 className="font-medium mb-1">Both Get Rewarded</h3>
                   <p className="text-sm text-muted-foreground">
-                    Once your friend makes their first purchase, both of you receive ₹250 cashback
+                    Once your friend makes their first purchase, both of you receive QAR250 cashback
                   </p>
                 </div>
               </div>
@@ -320,7 +320,7 @@ const ReferralItem = ({ referral }) => {
       <div className="flex items-center">
         {referral.status === "completed" ? (
           <div className="flex items-center">
-            <span className="font-medium text-green-500 mr-2">+₹{referral.reward}</span>
+            <span className="font-medium text-green-500 mr-2">+QAR{referral.reward}</span>
             <div className="h-6 w-6 rounded-full bg-green-500/20 flex items-center justify-center">
               <CheckCircle className="h-3 w-3 text-green-500" />
             </div>

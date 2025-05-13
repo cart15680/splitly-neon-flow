@@ -53,9 +53,9 @@ const SellerAnalytics = () => {
 
   // Summary stats
   const summaryStats = [
-    { title: "Sales Revenue", value: "₹18.5L", change: "+12.5%", isPositive: true },
+    { title: "Sales Revenue", value: "QAR18.5L", change: "+12.5%", isPositive: true },
     { title: "Units Sold", value: "845", change: "+8.2%", isPositive: true },
-    { title: "Avg Order Value", value: "₹21,893", change: "+4.3%", isPositive: true },
+    { title: "Avg Order Value", value: "QAR21,893", change: "+4.3%", isPositive: true },
     { title: "Conversion Rate", value: "3.2%", change: "-0.5%", isPositive: false },
   ];
 
@@ -125,7 +125,7 @@ const SellerAnalytics = () => {
                   <Line
                     type="monotone"
                     dataKey="sales"
-                    name="Sales (₹)"
+                    name="Sales (QAR)"
                     stroke="#00FFD1"
                     activeDot={{ r: 8 }}
                     strokeWidth={2}
@@ -157,7 +157,7 @@ const SellerAnalytics = () => {
                     <div className="flex items-center text-xs text-muted-foreground">
                       <span>{product.sales} units</span>
                       <span className="mx-1">•</span>
-                      <span>₹{(product.revenue / 100000).toFixed(1)}L</span>
+                      <span>QAR{(product.revenue / 100000).toFixed(1)}L</span>
                     </div>
                   </div>
                   <span className="text-sm font-semibold">{product.percentage}%</span>
@@ -192,7 +192,7 @@ const SellerAnalytics = () => {
                 <XAxis dataKey="name" stroke="#888888" />
                 <YAxis stroke="#888888" />
                 <Tooltip
-                  formatter={(value) => [`₹${value.toLocaleString()}`, null]}
+                  formatter={(value) => [`QAR${value.toLocaleString()}`, null]}
                   contentStyle={{ backgroundColor: "#1a1a1a", border: "1px solid #333" }}
                 />
                 <Legend />
