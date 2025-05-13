@@ -30,8 +30,23 @@ const ToastContext = React.createContext<{
   removeToast: () => {},
 });
 
-// Export the toast function
-export const toast = sonnerToast;
+// Export a properly typed toast function
+export const toast = (props: {
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: React.ReactNode;
+  variant?: "default" | "destructive";
+}) => {
+  if (props.variant === "destructive") {
+    return sonnerToast.error(props.title as string, {
+      description: props.description as string,
+    });
+  }
+  
+  return sonnerToast(props.title as string, {
+    description: props.description as string,
+  });
+};
 
 // Export the useToast hook
 export function useToast() {
@@ -44,11 +59,11 @@ export function useToast() {
       
       // Also trigger the sonner toast
       if (data.variant === "destructive") {
-        sonnerToast.error(data.title, {
+        sonnerToast.error(data.title as string, {
           description: data.description as string,
         });
       } else {
-        sonnerToast(data.title, {
+        sonnerToast(data.title as string, {
           description: data.description as string,
         });
       }
