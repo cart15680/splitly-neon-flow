@@ -30,9 +30,7 @@ const TopNav = ({ title = "Splitly" }: TopNavProps) => {
         </div>
       </div>
       <div className="flex items-center">
-        <button className="text-foreground">
-          <Search size={22} />
-        </button>
+        {/* Removed notification/search icon */}
       </div>
     </div>
   );

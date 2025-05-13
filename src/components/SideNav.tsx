@@ -1,6 +1,6 @@
 
 import { Link, useNavigate } from "react-router-dom";
-import { Home, ShoppingCart, CreditCard, History, User, Settings, HelpCircle, Bell, LogOut, Scan } from "lucide-react";
+import { Home, ShoppingCart, CreditCard, History, User, Settings, HelpCircle, LogOut, Scan } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 interface SideNavProps {
@@ -42,7 +42,7 @@ const SideNav = ({ onItemClick = () => {} }: SideNavProps) => {
         <div className="mt-8 pt-6 border-t border-border">
           <h3 className="text-sm text-muted-foreground mb-4">My Account</h3>
           <div className="flex flex-col space-y-1">
-            <NavItem icon={<Bell />} label="Notifications" path="/notifications" onClick={onItemClick} />
+            {/* Removed notification link */}
             <button 
               className="flex items-center gap-3 py-2 px-3 rounded-lg text-destructive hover:bg-muted transition-colors"
               onClick={handleLogout}

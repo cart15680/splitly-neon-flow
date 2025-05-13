@@ -150,9 +150,9 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
           <h1 className="text-xl font-semibold ml-12 md:ml-0">{title}</h1>
           
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" className="hidden sm:flex">
-              <HelpCircle size={16} className="mr-2" />
-              Help
+            <Button variant="outline" size="sm" onClick={handleLogout} className="flex items-center">
+              <LogOut size={16} className="mr-2" />
+              Logout
             </Button>
           </div>
         </header>
