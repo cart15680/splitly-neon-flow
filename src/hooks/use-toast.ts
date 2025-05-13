@@ -1,13 +1,76 @@
 
-import { toast } from "sonner";
-import { useToast as useToastInternal } from "@/components/ui/use-toast";
+import { toast as sonnerToast } from "sonner";
+import * as React from "react";
 
-export { toast };
-export const useToast = useToastInternal;
+// Define the interface types directly here to avoid circular dependencies
+export interface Toast {
+  id: string;
+  title?: React.ReactNode;
+  description?: React.ReactNode;
+  action?: React.ReactNode;
+  variant?: "default" | "destructive";
+}
 
-// Re-export interface types
-export type {
-  Toast,
-  ToastActionElement,
-  ToastProps,
-} from "@/components/ui/toast";
+export type ToastActionElement = React.ReactElement;
+
+export interface ToastProps {
+  toast: Toast;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
+// Create a simple toast context
+const ToastContext = React.createContext<{
+  toasts: Toast[];
+  addToast: (toast: Omit<Toast, "id">) => void;
+  removeToast: (id: string) => void;
+}>({
+  toasts: [],
+  addToast: () => {},
+  removeToast: () => {},
+});
+
+// Export the toast function
+export const toast = sonnerToast;
+
+// Export the useToast hook
+export function useToast() {
+  const [toasts, setToasts] = React.useState<Toast[]>([]);
+
+  const addToast = React.useCallback(
+    (data: Omit<Toast, "id">) => {
+      const id = Math.random().toString(36).substring(2, 9);
+      setToasts((prev) => [...prev, { id, ...data }]);
+      
+      // Also trigger the sonner toast
+      if (data.variant === "destructive") {
+        sonnerToast.error(data.title, {
+          description: data.description as string,
+        });
+      } else {
+        sonnerToast(data.title, {
+          description: data.description as string,
+        });
+      }
+    },
+    [setToasts]
+  );
+
+  const removeToast = React.useCallback(
+    (id: string) => {
+      setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    },
+    [setToasts]
+  );
+
+  const value = React.useMemo(
+    () => ({
+      toasts,
+      addToast,
+      removeToast,
+    }),
+    [toasts, addToast, removeToast]
+  );
+
+  return value;
+}
