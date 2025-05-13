@@ -11,8 +11,7 @@ import {
   Settings, 
   HelpCircle, 
   LogOut, 
-  Menu, 
-  Bell
+  Menu
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -20,7 +19,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "@/hooks/use-toast";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface SellerLayoutProps {
   children: ReactNode;
@@ -57,13 +55,6 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
       description: "You have been logged out of your account",
     });
     navigate("/login");
-  };
-
-  const handleNotificationClick = () => {
-    toast({
-      title: "Notifications",
-      description: "You have 2 new seller notifications",
-    });
   };
   
   // Sidebar content component for reuse
@@ -163,37 +154,6 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
               <HelpCircle size={16} className="mr-2" />
               Help
             </Button>
-            
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button variant="ghost" size="icon" onClick={handleNotificationClick} className="relative">
-                  <Bell size={20} />
-                  <span className="absolute -top-1 -right-1 bg-primary text-xs text-primary-foreground rounded-full w-4 h-4 flex items-center justify-center">
-                    2
-                  </span>
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-80 p-0">
-                <div className="p-4 border-b">
-                  <h3 className="font-semibold">Seller Notifications</h3>
-                </div>
-                <div className="max-h-[300px] overflow-auto">
-                  <div className="p-3 border-b hover:bg-muted/50 cursor-pointer">
-                    <p className="text-sm font-medium">New Order</p>
-                    <p className="text-xs text-muted-foreground">You received a new order #ORD-5599</p>
-                    <p className="text-xs text-muted-foreground mt-1">10 minutes ago</p>
-                  </div>
-                  <div className="p-3 border-b hover:bg-muted/50 cursor-pointer">
-                    <p className="text-sm font-medium">Payment Complete</p>
-                    <p className="text-xs text-muted-foreground">Payment for order #ORD-5598 has been processed</p>
-                    <p className="text-xs text-muted-foreground mt-1">3 hours ago</p>
-                  </div>
-                </div>
-                <div className="p-2 text-center border-t">
-                  <button className="text-xs text-primary font-medium">See all notifications</button>
-                </div>
-              </PopoverContent>
-            </Popover>
           </div>
         </header>
 
