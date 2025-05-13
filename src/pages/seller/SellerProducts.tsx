@@ -83,8 +83,7 @@ const SellerProducts = () => {
       description: `QR Code detected: ${result}`,
     });
     
-    // Fix the comparison by converting result to a number when comparing with product.id
-    // Only if product.id is a number, otherwise compare as strings
+    // Fix the comparison by checking and converting types
     const scannedProduct = products.find(p => {
       if (typeof p.id === 'number') {
         return p.id === parseInt(result);
@@ -142,12 +141,12 @@ const SellerProducts = () => {
                 className="pl-10"
               />
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" onClick={() => setShowScanner(true)}>
+            <div className="flex flex-wrap gap-2 w-full md:w-auto">
+              <Button variant="outline" onClick={() => setShowScanner(true)} className="flex-1 md:flex-none">
                 <ScanLine className="mr-2 h-4 w-4" />
                 Scan Product
               </Button>
-              <Button variant="outline">
+              <Button variant="outline" className="flex-1 md:flex-none">
                 <Filter className="mr-2 h-4 w-4" />
                 Filter
               </Button>
@@ -156,29 +155,29 @@ const SellerProducts = () => {
         </CardContent>
       </Card>
 
-      {/* Products table */}
-      <Card>
-        <div className="rounded-md border">
+      {/* Products table - Now with responsive handling */}
+      <Card className="overflow-hidden">
+        <div className="rounded-md border overflow-x-auto">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[80px]">Image</TableHead>
+                <TableHead className="w-[80px] hidden sm:table-cell">Image</TableHead>
                 <TableHead>
                   <div className="flex items-center">
                     Product
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                   </div>
                 </TableHead>
-                <TableHead>Category</TableHead>
+                <TableHead className="hidden md:table-cell">Category</TableHead>
                 <TableHead>
                   <div className="flex items-center">
                     Price
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                   </div>
                 </TableHead>
-                <TableHead>Stock</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Splitly EMI</TableHead>
+                <TableHead className="hidden sm:table-cell">Stock</TableHead>
+                <TableHead className="hidden sm:table-cell">Status</TableHead>
+                <TableHead className="hidden lg:table-cell">Splitly EMI</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -200,7 +199,7 @@ const SellerProducts = () => {
                   
                   return (
                     <TableRow key={product.id}>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <div className="h-10 w-10 rounded overflow-hidden">
                           <img
                             src={product.images[0]}
@@ -209,8 +208,22 @@ const SellerProducts = () => {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className="font-medium">{product.name}</TableCell>
-                      <TableCell>{product.category}</TableCell>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2 sm:gap-0">
+                          <div className="w-8 h-8 rounded overflow-hidden sm:hidden mr-2">
+                            <img
+                              src={product.images[0]}
+                              alt={product.name}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <span className="line-clamp-2">{product.name}</span>
+                        </div>
+                        <span className="text-xs text-muted-foreground md:hidden block mt-1">
+                          {product.category}
+                        </span>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">{product.category}</TableCell>
                       <TableCell>
                         <div className="flex flex-col">
                           <span>{formatCurrency(product.price * (1 - (product.discount || 0) / 100))}</span>
@@ -221,13 +234,13 @@ const SellerProducts = () => {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell>{stockCount}</TableCell>
-                      <TableCell>
+                      <TableCell className="hidden sm:table-cell">{stockCount}</TableCell>
+                      <TableCell className="hidden sm:table-cell">
                         <span className={`px-2 py-1 rounded-full text-xs ${stockStatus.className}`}>
                           {stockStatus.label}
                         </span>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="hidden lg:table-cell">
                         {product.bnplEligible ? (
                           <Check className="h-5 w-5 text-green-500" />
                         ) : (
@@ -235,7 +248,7 @@ const SellerProducts = () => {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
+                        <div className="flex justify-end gap-1 md:gap-2">
                           <Button 
                             variant="ghost" 
                             size="icon"
@@ -247,13 +260,13 @@ const SellerProducts = () => {
                           >
                             <Send className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" className="hidden sm:inline-flex">
                             <Edit className="h-4 w-4" />
                           </Button>
                           <Button variant="ghost" size="icon" className="text-destructive">
                             <Trash2 className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon">
+                          <Button variant="ghost" size="icon" className="hidden md:inline-flex">
                             <QrCode className="h-4 w-4" />
                           </Button>
                         </div>
@@ -269,7 +282,7 @@ const SellerProducts = () => {
 
       {/* QR Scanner Dialog */}
       <Dialog open={showScanner} onOpenChange={setShowScanner}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Scan Product QR Code</DialogTitle>
             <DialogDescription>

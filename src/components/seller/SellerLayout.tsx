@@ -123,7 +123,7 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
             <Button 
               variant="ghost" 
               size="icon" 
-              className="fixed top-4 left-4 z-50"
+              className="fixed top-4 left-4 z-40"
             >
               <Menu />
             </Button>
@@ -137,11 +137,11 @@ const SellerLayout = ({ children, title = "Seller Dashboard" }: SellerLayoutProp
       {/* Main content */}
       <div className="flex-1">
         {/* Header */}
-        <header className="h-16 border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 bg-background/80 backdrop-blur-sm z-10">
-          <h1 className="text-xl font-semibold">{title}</h1>
+        <header className="h-16 border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 bg-background/80 backdrop-blur-sm z-30 mt-0 pt-0">
+          <h1 className="text-xl font-semibold ml-12 md:ml-0">{title}</h1>
           
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="hidden sm:flex">
               <HelpCircle size={16} className="mr-2" />
               Help
             </Button>
