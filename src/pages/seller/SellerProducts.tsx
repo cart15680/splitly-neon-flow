@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SellerLayout from "@/components/seller/SellerLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +43,7 @@ import {
 } from "@/components/ui/dialog";
 
 const SellerProducts = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showScanner, setShowScanner] = useState(false);
   const [showPaymentScanner, setShowPaymentScanner] = useState(false);
@@ -75,6 +76,14 @@ const SellerProducts = () => {
         className: "bg-red-500/10 text-red-500"
       };
     }
+  };
+
+  const handleLogout = () => {
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account",
+    });
+    navigate("/login");
   };
 
   const handleScanSuccess = (result: string) => {
@@ -156,8 +165,8 @@ const SellerProducts = () => {
       </Card>
 
       {/* Products table with improved mobile responsiveness */}
-      <Card className="overflow-hidden">
-        <div className="rounded-md border overflow-x-auto max-w-full">
+      <Card className="mb-6">
+        <div className="overflow-x-auto w-full">
           <Table>
             <TableHeader>
               <TableRow>
@@ -279,6 +288,15 @@ const SellerProducts = () => {
           </Table>
         </div>
       </Card>
+
+      {/* Logout button */}
+      <Button 
+        variant="destructive" 
+        onClick={handleLogout}
+        className="md:hidden mb-10" // Only show on mobile, since desktop has it in sidebar
+      >
+        Logout
+      </Button>
 
       {/* QR Scanner Dialog */}
       <Dialog open={showScanner} onOpenChange={setShowScanner}>

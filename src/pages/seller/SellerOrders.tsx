@@ -1,5 +1,6 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SellerLayout from "@/components/seller/SellerLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,13 +19,16 @@ import {
   ArrowUpDown,
   AlertCircle,
   Eye,
-  Download
+  Download,
+  LogOut
 } from "lucide-react";
 import { formatCurrency } from "@/utils/format";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { toast } from "@/hooks/use-toast";
 
 const SellerOrders = () => {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
 
   // Mock orders data
@@ -109,6 +113,14 @@ const SellerOrders = () => {
     }
   };
 
+  const handleLogout = () => {
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account",
+    });
+    navigate("/login");
+  };
+
   return (
     <SellerLayout title="Manage Orders">
       {/* Header */}
@@ -144,8 +156,8 @@ const SellerOrders = () => {
       </Card>
 
       {/* Orders table with improved mobile responsiveness */}
-      <Card>
-        <div className="rounded-md border overflow-x-auto max-w-full">
+      <Card className="mb-6">
+        <div className="overflow-x-auto w-full">
           <Table>
             <TableHeader>
               <TableRow>
@@ -237,6 +249,16 @@ const SellerOrders = () => {
           </Table>
         </div>
       </Card>
+      
+      {/* Logout button */}
+      <Button 
+        variant="destructive" 
+        onClick={handleLogout}
+        className="md:hidden mb-10" // Only show on mobile, since desktop has it in sidebar
+      >
+        <LogOut className="mr-2 h-4 w-4" />
+        Logout
+      </Button>
     </SellerLayout>
   );
 };
