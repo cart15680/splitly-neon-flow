@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 100% 98%; /* very light sky blue */
+    --foreground: 210 30% 20%;  /* deep blue for contrast */
+
+    --card: 210 100% 97%;
+    --card-foreground: 210 30% 20%;
+
+    --popover: 210 100% 98%;
+    --popover-foreground: 210 30% 20%;
+
+    --primary: 200 100% 50%;         /* sky blue */
+    --primary-foreground: 0 0% 100%; /* white text */
+
+    --secondary: 180 75% 65%;        /* teal/light green */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 90%;            /* pale blue/gray */
+    --muted-foreground: 210 15% 40%;
+
+    --accent: 200 100% 80%;          /* soft blue accent */
+    --accent-foreground: 210 30% 20%;
+
+    --destructive: 0 85% 60%;        /* red for errors */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 210 40% 85%;
+    --input: 210 40% 85%;
+    --ring: 200 100% 50%;
+    --radius: 1.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border selection:bg-primary/20 selection:text-primary-foreground;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02", "cv03";
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .glass-morphism {
+    @apply backdrop-blur-xl bg-white/50 border border-white/30 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.1)];
+  }
+
+  .neo-blur {
+    @apply backdrop-blur-2xl bg-white/70 border border-blue-200;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-br from-blue-900 via-blue-700 to-blue-500 bg-clip-text text-transparent;
+  }
+
+  .text-gradient-primary {
+    @apply bg-gradient-to-br from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent;
+  }
+
+  .neon-glow {
+    @apply relative;
+  }
+
+  .neon-glow:after {
+    content: '';
+    @apply absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-300 ease-in-out;
+    box-shadow: 0 0 15px 2px hsl(var(--primary));
+  }
+
+  .neon-glow:hover:after {
+    @apply opacity-100;
+  }
+
+  .soft-shadow {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  }
+}
